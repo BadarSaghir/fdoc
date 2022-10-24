@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { FdocPostDto } from './fdoc-post-dto.interface';
-import { User, UserDocument } from './schemas/user.schema';
+import { FdocPostDto } from '../interfaces/fdoc-post-dto.interface';
+import { User, UserDocument } from '../schemas/user.schema';
 
 @Injectable()
 export class AppService {
@@ -23,13 +23,14 @@ export class AppService {
       });
       const user = await userSave.save();
       console.log('User Created Successfully');
-      const token = this.jwtService.sign({ _id: user._id });
+      const token = this.jwtService.sign({ id: user._id });
       return { res: 'user created successfully', user, token };
     } catch (error) {
       console.log('An Error Occur');
       return { res: 'Error Occur!' };
     }
   }
+
   getFDoc(): string {
     return 'fdoc';
   }

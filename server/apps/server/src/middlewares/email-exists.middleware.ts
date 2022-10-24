@@ -6,18 +6,23 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { error } from 'console';
-import { NextFunction } from 'express';
 import { Model } from 'mongoose';
-import { User, UserDocument } from './schemas/user.schema';
+import { User, UserDocument } from '../schemas/user.schema';
+import { Request, Response, NextFunction } from 'express';
+import { FdocPostDto } from '../interfaces/fdoc-post-dto.interface';
 
 @Injectable()
 export class EmailExistsMiddleware implements NestMiddleware {
   constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
-  async use(req: Request, res: Response, next: NextFunction) {
+  async use(
+    req: Request<any, any, FdocPostDto>,
+    res: Response,
+    next: NextFunction,
+  ) {
     console.log('middleware');
     let exception: HttpException;
     try {
-      const { email, name, profilePic }: any = req.body;
+      const { email, name, profilePic } = req.body;
       if (!email || !name || !profilePic) throw error('Bad Request by client');
       const userExists = await this.userModel.findOne({ email: email });
       if (!userExists) next();

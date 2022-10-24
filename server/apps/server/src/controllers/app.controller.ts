@@ -1,11 +1,11 @@
 import { Body, Controller, Get, Post, Req } from '@nestjs/common';
-import { AppService } from './app.service';
-import { FdocPostDto } from './fdoc-post-dto.interface';
-import { User } from './schemas/user.schema';
+import { AppService } from '../services/app.service';
+import { FdocPostDto } from '../interfaces/fdoc-post-dto.interface';
+import { User } from '../schemas/user.schema';
 
 export const appControllerRoute = '/api/v1/fdoc';
 export const appControllerSignupRoute = 'signup';
-export const appControllerGetFDocRoute = 'get';
+export const appControllerGetFDocRoute = '/';
 
 @Controller(appControllerRoute)
 export class AppController {

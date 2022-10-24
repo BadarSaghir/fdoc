@@ -3,14 +3,15 @@ import {
   AppController,
   appControllerRoute,
   appControllerSignupRoute,
-} from './app.controller';
-import { AppService } from './app.service';
+} from './controllers/app.controller';
+import { AppService } from './services/app.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Config } from './config';
 import { User, UserSchema } from './schemas/user.schema';
-import { EmailExistsMiddleware } from './email-exists.middleware';
+import { EmailExistsMiddleware } from './middlewares/email-exists.middleware';
 import { JwtModule } from '@nestjs/jwt';
 import { jwtConstants } from './constants';
+import { AuthMiddleware } from './middlewares/auth.middleware';
 
 @Module({
   imports: [
@@ -29,6 +30,10 @@ export class AppModule {
     consumer.apply(EmailExistsMiddleware).forRoutes({
       path: appControllerRoute + '/' + appControllerSignupRoute,
       method: RequestMethod.POST,
+    });
+    consumer.apply(AuthMiddleware).forRoutes({
+      path: appControllerRoute,
+      method: RequestMethod.GET,
     });
   }
 }

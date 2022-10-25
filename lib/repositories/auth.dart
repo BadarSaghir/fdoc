@@ -54,6 +54,11 @@ class GoogleAuth {
             errorModel = ErrorModel(null, newUser);
             break;
           default:
+            errorModel = ErrorModel(
+                'Unexpected Error => status:${res.statusCode.toString()} , body:${res.body.toString()}',
+                null);
+
+            print(res.statusCode.toString() + res.body.toString());
             break;
         }
         // print(user.email);
@@ -94,7 +99,12 @@ class GoogleAuth {
             errorModel = ErrorModel(null, newUser);
             break;
           default:
-            errorModel = ErrorModel('Unexpected Error', null);
+            errorModel = ErrorModel(
+                'Unexpected Error => status:${res.statusCode.toString()} , body:${res.body.toString()}',
+                null);
+
+            print(res.statusCode.toString() + res.body.toString());
+
             break;
         }
         // print(user.email);

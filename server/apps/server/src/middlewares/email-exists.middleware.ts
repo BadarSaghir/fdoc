@@ -1,3 +1,4 @@
+import { JwtService } from '@nestjs/jwt';
 import {
   HttpException,
   HttpStatus,
@@ -13,7 +14,7 @@ import { FdocPostDto } from '../interfaces/fdoc-post-dto.interface';
 
 @Injectable()
 export class EmailExistsMiddleware implements NestMiddleware {
-  constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
+  constructor(@InjectModel(User.name) private userModel: Model<UserDocument>,private jwtService:JwtService) {}
   async use(
     req: Request<any, any, FdocPostDto>,
     res: Response,
@@ -24,13 +25,13 @@ export class EmailExistsMiddleware implements NestMiddleware {
     try {
       const { email, name, profilePic } = req.body;
       if (!email || !name || !profilePic) throw error('Bad Request by client');
-      const userExists = await this.userModel.findOne({ email: email });
-      if (!userExists) next();
-      else
-        exception = new HttpException(
-          'User already with this email already exists',
-          HttpStatus.CONFLICT,
-        );
+      const user = await this.userModel.findOne({ email: email });
+
+      if (!user) next();
+      else {
+        const token = await this.jwtService.signAsync({ id: user._id });
+        return { res: 'user created successfully', user, token };
+      }
     } catch (e) {
       console.log('middleware Error', e);
       exception = new HttpException('Bad Request', HttpStatus.BAD_REQUEST);

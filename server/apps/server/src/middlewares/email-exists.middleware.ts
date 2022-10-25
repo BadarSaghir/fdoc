@@ -14,7 +14,10 @@ import { FdocPostDto } from '../interfaces/fdoc-post-dto.interface';
 
 @Injectable()
 export class EmailExistsMiddleware implements NestMiddleware {
-  constructor(@InjectModel(User.name) private userModel: Model<UserDocument>,private jwtService:JwtService) {}
+  constructor(
+    @InjectModel(User.name) private userModel: Model<UserDocument>,
+    private jwtService: JwtService,
+  ) {}
   async use(
     req: Request<any, any, FdocPostDto>,
     res: Response,

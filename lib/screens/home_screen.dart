@@ -1,4 +1,4 @@
-import 'package:fdoc/auth/auth.dart';
+import 'package:fdoc/repositories/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

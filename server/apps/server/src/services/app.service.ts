@@ -34,7 +34,7 @@ export class AppService {
     }
   }
 
-  async getFDoc(req: Request): Promise<{ user?: User; token?: string }> {
+  async index(req: Request): Promise<{ user?: User; token?: string }> {
     const user = await this.userModel.findById(req.user);
     const token = req.token;
     return { user, token };

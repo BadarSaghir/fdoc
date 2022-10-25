@@ -33,9 +33,12 @@ export class AppModule {
       path: appControllerRoute + '/' + appControllerSignupRoute,
       method: RequestMethod.POST,
     });
-    consumer.apply(AuthMiddleware).forRoutes({
-      path: appControllerRoute,
-      method: RequestMethod.GET,
-    });
+    consumer
+      .apply(AuthMiddleware)
+      .exclude({
+        path: appControllerRoute + '/' + appControllerSignupRoute,
+        method: RequestMethod.POST,
+      })
+      .forRoutes(AppController);
   }
 }

@@ -5,22 +5,22 @@ import { User } from '../schemas/user.schema';
 import { Request } from 'express';
 export const appControllerRoute = '/api/v1/fdoc';
 export const appControllerSignupRoute = 'signup';
-export const appControllerGetFDocRoute = '/';
+export const appControllerIndexRoute = '/';
 
 @Controller(appControllerRoute)
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  @Get(appControllerGetFDocRoute)
-  async getFDoc(@Req() req: Request): Promise<{
+  @Get(appControllerIndexRoute)
+  async index(@Req() req: Request): Promise<{
     user?: User;
     token?: string;
   }> {
-    return await this.appService.getFDoc(req);
+    return await this.appService.index(req);
   }
 
   @Post(appControllerSignupRoute)
-  async SignUp(
+  async signUp(
     @Body() body: FdocPostDto,
   ): Promise<{ res: string; user?: User }> {
     return await this.appService.signUp(body);

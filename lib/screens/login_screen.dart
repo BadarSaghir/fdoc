@@ -1,4 +1,4 @@
-import 'package:fdoc/auth/auth.dart';
+import 'package:fdoc/repositories/auth.dart';
 import 'package:fdoc/colors.dart';
 import 'package:fdoc/screens/home_screen.dart';
 import 'package:flutter/material.dart';

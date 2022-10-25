@@ -33,8 +33,14 @@ class GoogleAuth {
         switch (res.statusCode) {
           case 201:
             final newUser = userAcc.copyWith(
-              uid: jsonDecode(res.body)['user']['_id'],
-            );
+                uid: jsonDecode(res.body)['user']['_id'],
+                token: jsonDecode(res.body)['token']);
+            errorModel = ErrorModel(null, newUser);
+            break;
+          case 200:
+            final newUser = userAcc.copyWith(
+                uid: jsonDecode(res.body)['user']['_id'],
+                token: jsonDecode(res.body)['token']);
             errorModel = ErrorModel(null, newUser);
             break;
           default:

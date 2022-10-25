@@ -17,12 +17,14 @@ import { AuthMiddleware } from './middlewares/auth.middleware';
   imports: [
     JwtModule.register({
       secret: jwtConstants.secret,
-      signOptions: { notBefore: '2h' },
+      signOptions: { expiresIn: '2d' },
     }),
     MongooseModule.forRoot(Config.getMoonogseConfig()),
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
   ],
+
   controllers: [AppController],
+
   providers: [AppService],
 })
 export class AppModule {

@@ -9,12 +9,15 @@ export class AuthMiddleware implements NestMiddleware {
       const token: string = req.header('x-auth-token');
 
       if (!token) res.status(401).json({ message: 'Un-Authorize User' });
-      const verify = this.jwtService.verify<{ id: string }>(token);
+      const verify = await this.jwtService.verifyAsync<{ id: string }>(token);
       if (!verify)
         res.status(401).json({ message: 'Token verification issue' });
       req.user = verify.id;
       req.token = token;
-    } catch (error) {}
-    next();
+      next();
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ error: error });
+    }
   }
 }

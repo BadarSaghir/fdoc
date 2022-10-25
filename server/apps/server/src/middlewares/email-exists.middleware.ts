@@ -29,7 +29,6 @@ export class EmailExistsMiddleware implements NestMiddleware {
       const { email, name, profilePic } = req.body;
       if (!email || !name || !profilePic) throw error('Bad Request by client');
       const user = await this.userModel.findOne({ email: email });
-
       if (!user) next();
       else {
         const token = await this.jwtService.signAsync({ id: user._id });

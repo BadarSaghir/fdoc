@@ -78,9 +78,11 @@ class GoogleAuth {
         // print(user.email);
         // print(user.displayName);
         // print(user.photoUrl);
+      } else {
+        return errorModel = ErrorModel('Unable to get sign In : ${e}', null);
       }
     } catch (e) {
-      errorModel = ErrorModel('Catch : ${e}', null);
+      errorModel = ErrorModel('Unable to get Login due to no user Error', null);
 
       print(e);
     }

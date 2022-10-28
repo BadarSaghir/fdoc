@@ -35,11 +35,11 @@ class _MyAppState extends ConsumerState<MyApp> {
 
   void getUserData() async {
     LocalStorage localStorage = LocalStorage();
-    token = await localStorage.getGoogleToken() ?? '';
+    token = await localStorage.getToken() ?? '';
+    if (token == '') return;
     ErrorModel errorModel = await ref.read(authProvider).getUserData();
 
     if (token == '') token == 'problem';
-    localStorage.getToken();
     print('init');
     errorModel.data != null
         ? ref.read(userProvider.notifier).update((state) => errorModel.data)
@@ -52,7 +52,7 @@ class _MyAppState extends ConsumerState<MyApp> {
   ) {
     var user = ref.watch(userProvider);
     return MaterialApp(
-      title: token,
+      title: "fdoc",
       home: user == null ? const LoginScreen() : const HomeScreen(),
       // home: LoginScreen(),
     );

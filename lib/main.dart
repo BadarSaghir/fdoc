@@ -27,15 +27,17 @@ class _MyAppState extends ConsumerState<MyApp> {
   void initState() {
     // TODO: implement initState
     super.initState();
+
     getUserData();
   }
 
   var token = '';
 
   void getUserData() async {
-    ErrorModel errorModel = await ref.read(authProvider).getUserData();
     LocalStorage localStorage = LocalStorage();
     token = await localStorage.getGoogleToken() ?? '';
+    ErrorModel errorModel = await ref.read(authProvider).getUserData();
+
     if (token == '') token == 'problem';
     localStorage.getToken();
     print('init');

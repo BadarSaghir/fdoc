@@ -94,7 +94,10 @@ class GoogleAuth {
   Future<ErrorModel> getUserData() async {
     ErrorModel errorModel = ErrorModel("Unexpected error occur", null);
     try {
-      var token = await _localStorage.getToken() ?? '';
+      var token = await _localStorage.getToken();
+      if (token == null) {
+        return ErrorModel("Unexpected error occur -----No Token", null);
+      }
       var serverToken = await _localStorage.getGoogleToken() ?? "";
       if (token != null) {
         var res =

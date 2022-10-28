@@ -1,7 +1,9 @@
 import 'dart:convert' show jsonDecode, jsonEncode;
+import 'dart:developer';
 
 import 'package:fdoc/models/error_model.dart';
 import 'package:fdoc/repositories/local_storage.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart';
@@ -32,8 +34,20 @@ class GoogleAuth {
     try {
       final user = await _googleSignIn.signIn();
       if (user != null) {
-        final userAcc =
-            UserModel(user.displayName, user.email, user.photoUrl, '', '');
+        var googleToken = await user.authentication;
+        // serverToken = ' ';
+        var serverToken = googleToken.accessToken ?? '';
+        print('server Token $serverToken');
+
+        _localStorage.setGoogleToken(serverToken);
+        var userAcc = UserModel(
+          name: user.displayName,
+          email: user.email,
+          profilePic: user.photoUrl,
+          uid: '',
+          token: '',
+          googleToken: serverToken,
+        );
 
         var res = await _client.post(Uri.parse("${kBaseUrl}api/v1/fdoc/signup"),
             body: userAcc.toJson(),
@@ -43,19 +57,19 @@ class GoogleAuth {
             final newUser = userAcc.copyWith(
                 uid: jsonDecode(res.body)['user']['_id'],
                 token: jsonDecode(res.body)['token']);
-            _localStorage.setToken(newUser.token);
+            _localStorage.setToken(newUser.token!);
             errorModel = ErrorModel(null, newUser);
             break;
           case 200:
             final newUser = userAcc.copyWith(
                 uid: jsonDecode(res.body)['user']['_id'],
                 token: jsonDecode(res.body)['token']);
-            _localStorage.setToken(newUser.token);
+            _localStorage.setToken(newUser.token!);
             errorModel = ErrorModel(null, newUser);
             break;
           default:
             errorModel = ErrorModel(
-                'Unexpected Error => status:${res.statusCode.toString()} , body:${res.body.toString()}',
+                'Unexpected Error => status:${res.statusCode.toString()} ,google:token : ${serverToken} body:${res.body.toString()}',
                 null);
 
             print(res.statusCode.toString() + res.body.toString());
@@ -66,36 +80,42 @@ class GoogleAuth {
         // print(user.photoUrl);
       }
     } catch (e) {
-      errorModel = ErrorModel(e.toString(), null);
+      errorModel = ErrorModel('Catch : ${e}', null);
 
       print(e);
     }
     return errorModel;
   }
 
+  LocalStorage getLocalStorage() {
+    return _localStorage;
+  }
+
   Future<ErrorModel> getUserData() async {
     ErrorModel errorModel = ErrorModel("Unexpected error occur", null);
     try {
-      var token = await _localStorage.getToken();
+      var token = await _localStorage.getToken() ?? '';
+      var serverToken = await _localStorage.getGoogleToken() ?? "";
       if (token != null) {
-        var res = await _client.get(Uri.parse("${kBaseUrl}api/v1/fdoc"),
-            headers: {
-              'Content-Type': 'Application/json; charset=UTF-8',
-              'x-auth-token': token
-            });
+        var res =
+            await _client.get(Uri.parse("${kBaseUrl}api/v1/fdoc"), headers: {
+          'Content-Type': 'Application/json; charset=UTF-8',
+          'googleToken': serverToken,
+          'x-auth-token': token
+        });
         switch (res.statusCode) {
           case 201:
             final newUser =
                 UserModel.fromJson(jsonEncode(jsonDecode(res.body)['user']))
-                    .copyWith(token: token);
-            _localStorage.setToken(newUser.token);
+                    .copyWith(token: token, googleToken: serverToken);
+            _localStorage.setToken(newUser.token ?? '');
             errorModel = ErrorModel(null, newUser);
             break;
           case 200:
             final newUser =
                 UserModel.fromJson(jsonEncode(jsonDecode(res.body)['user']))
-                    .copyWith(token: token);
-            _localStorage.setToken(newUser.token);
+                    .copyWith(token: token, googleToken: serverToken);
+            _localStorage.setToken(newUser.token ?? '');
             errorModel = ErrorModel(null, newUser);
             break;
           default:

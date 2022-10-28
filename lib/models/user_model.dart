@@ -5,16 +5,17 @@ class UserModel {
   final String? name;
   final String? email;
   final String? profilePic;
-  final String uid;
-  final String token;
-
-  UserModel(
+  String? uid = '';
+  String? token = '';
+  String? googleToken = '';
+  UserModel({
     this.name,
     this.email,
     this.profilePic,
     this.uid,
     this.token,
-  );
+    this.googleToken,
+  });
 
   UserModel copyWith({
     String? name,
@@ -22,13 +23,15 @@ class UserModel {
     String? profilePic,
     String? uid,
     String? token,
+    String? googleToken,
   }) {
     return UserModel(
-      name ?? this.name,
-      email ?? this.email,
-      profilePic ?? this.profilePic,
-      uid ?? this.uid,
-      token ?? this.token,
+      name: name ?? this.name,
+      email: email ?? this.email,
+      profilePic: profilePic ?? this.profilePic,
+      uid: uid ?? this.uid,
+      token: token ?? this.token,
+      googleToken: googleToken ?? this.googleToken,
     );
   }
 
@@ -39,16 +42,19 @@ class UserModel {
       'profilePic': profilePic,
       'uid': uid,
       'token': token,
+      'googleToken': googleToken,
     };
   }
 
   factory UserModel.fromMap(Map<String, dynamic> map) {
     return UserModel(
-      map['name'] as String,
-      map['email'] as String,
-      map['profilePic'] as String,
-      map['uid'] as String,
-      map['token'] as String,
+      name: map['name'] != null ? map['name'] as String : null,
+      email: map['email'] != null ? map['email'] as String : null,
+      profilePic:
+          map['profilePic'] != null ? map['profilePic'] as String : null,
+      uid: map['uid'] ?? '',
+      token: map['token'] ?? '',
+      googleToken: map['googleToken'] ?? '',
     );
   }
 
@@ -59,7 +65,7 @@ class UserModel {
 
   @override
   String toString() {
-    return 'UserModel(name: $name, email: $email, profilePic: $profilePic, uid: $uid, token: $token)';
+    return 'UserModel(name: $name, email: $email, profilePic: $profilePic, uid: $uid, token: $token, googleToken: $googleToken)';
   }
 
   @override
@@ -70,7 +76,8 @@ class UserModel {
         other.email == email &&
         other.profilePic == profilePic &&
         other.uid == uid &&
-        other.token == token;
+        other.token == token &&
+        other.googleToken == googleToken;
   }
 
   @override
@@ -79,6 +86,7 @@ class UserModel {
         email.hashCode ^
         profilePic.hashCode ^
         uid.hashCode ^
-        token.hashCode;
+        token.hashCode ^
+        googleToken.hashCode;
   }
 }

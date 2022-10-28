@@ -1,13 +1,28 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LocalStorage {
-  void setToken(String token) async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    preferences.setString('x-auth-token', token);
+  SharedPreferences? preferences;
+
+  LocalStorage() {
+    createPrefInstance();
+  }
+  void createPrefInstance() async {
+    preferences = await SharedPreferences.getInstance();
+  }
+
+  void setToken(String? token) async {
+    await preferences?.setString('x-auth-token', token ?? '');
   }
 
   Future<String?> getToken() async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    return preferences.getString('x-auth-token');
+    return preferences?.getString('x-auth-token');
+  }
+
+  void setGoogleToken(String? token) async {
+    await preferences?.setString('google-token', token ?? '');
+  }
+
+  Future<String?> getGoogleToken() async {
+    return preferences?.getString('google-token');
   }
 }

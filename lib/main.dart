@@ -1,5 +1,6 @@
 import 'package:fdoc/models/error_model.dart';
 import 'package:fdoc/repositories/auth.dart';
+import 'package:fdoc/repositories/local_storage.dart';
 import 'package:fdoc/screens/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -29,11 +30,18 @@ class _MyAppState extends ConsumerState<MyApp> {
     getUserData();
   }
 
+  var token = '';
+
   void getUserData() async {
     ErrorModel errorModel = await ref.read(authProvider).getUserData();
-    if (errorModel != null && errorModel.data != null) {
-      ref.read(userProvider.notifier).update((state) => errorModel.data);
-    }
+    LocalStorage localStorage = LocalStorage();
+    token = await localStorage.getGoogleToken() ?? '';
+    if (token == '') token == 'problem';
+    localStorage.getToken();
+    print('init');
+    errorModel.data != null
+        ? ref.read(userProvider.notifier).update((state) => errorModel.data)
+        : '';
   }
 
   @override
@@ -42,8 +50,9 @@ class _MyAppState extends ConsumerState<MyApp> {
   ) {
     var user = ref.watch(userProvider);
     return MaterialApp(
-      title: 'fdoc',
-      home: user != null ? HomeScreen() : LoginScreen(),
+      title: token,
+      home: user == null ? const LoginScreen() : const HomeScreen(),
+      // home: LoginScreen(),
     );
   }
 }

@@ -54,8 +54,8 @@ class _MyAppState extends ConsumerState<MyApp> {
       routerDelegate: RoutemasterDelegate(
         routesBuilder: (context) {
           return user != null && user.token!.isNotEmpty
-              ? loggedOutRoute
-              : loggedInRoute;
+              ? loggedInRoute
+              : loggedOutRoute;
         },
       ),
       routeInformationParser: const RoutemasterParser(),

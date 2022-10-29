@@ -31,15 +31,11 @@ class _MyAppState extends ConsumerState<MyApp> {
     getUserData();
   }
 
-  var token = '';
+  String? token = '';
 
   void getUserData() async {
-    LocalStorage localStorage = LocalStorage();
-    token = await localStorage.getToken() ?? '';
-    if (token == '') return;
     ErrorModel errorModel = await ref.read(authProvider).getUserData();
-
-    if (token == '') token == 'problem';
+    if (errorModel.data == null) token == 'problem';
     print('init');
     errorModel.data != null
         ? ref.read(userProvider.notifier).update((state) => errorModel.data)

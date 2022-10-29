@@ -147,4 +147,9 @@ class GoogleAuth {
     }
     return errorModel;
   }
+
+  void signOut() async {
+    await _googleSignIn.signOut();
+    _localStorage.setToken('');
+  }
 }

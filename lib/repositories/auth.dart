@@ -115,7 +115,7 @@ class GoogleAuth {
           case 201:
             final newUser =
                 UserModel.fromJson(jsonEncode(jsonDecode(res.body)['user']))
-                    .copyWith(token: token, googleToken: serverToken);
+                    .copyWith(token: token, googleToken: serverToken ?? "");
             _localStorage.setToken(newUser.token ?? '');
             errorModel = ErrorModel(null, newUser);
             break;

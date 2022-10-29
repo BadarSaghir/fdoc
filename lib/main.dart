@@ -37,7 +37,7 @@ class _MyAppState extends ConsumerState<MyApp> {
 
   void getUserData() async {
     ErrorModel errorModel = await ref.read(authProvider).getUserData();
-    if (errorModel.data == null) token == 'problem';
+    if (errorModel.data == null) token == '';
     print('init');
     errorModel.data != null
         ? ref.read(userProvider.notifier).update((state) => errorModel.data)
@@ -48,14 +48,22 @@ class _MyAppState extends ConsumerState<MyApp> {
   Widget build(
     BuildContext context,
   ) {
-    var user = ref.watch(userProvider);
     return MaterialApp.router(
       title: "fdoc",
       routerDelegate: RoutemasterDelegate(
         routesBuilder: (context) {
-          return user != null && user.token!.isNotEmpty
-              ? loggedInRoute
-              : loggedOutRoute;
+          var user = ref.watch(userProvider);
+          if (user != null) {
+            if (user.token != null) {
+              if (user.token!.isNotEmpty) {
+                return loggedInRoute;
+              }
+            }
+          }
+          return loggedOutRoute;
+          // return user != null || user!.token!.isNotEmpty
+          //     ? loggedInRoute
+          //     : loggedOutRoute;
         },
       ),
       routeInformationParser: const RoutemasterParser(),

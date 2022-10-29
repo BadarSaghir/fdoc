@@ -149,7 +149,7 @@ class GoogleAuth {
   }
 
   void signOut() async {
-    await _googleSignIn.signOut();
     _localStorage.setToken('');
+    await _googleSignIn.signOut();
   }
 }

@@ -8,6 +8,7 @@ class HomeScreen extends ConsumerWidget {
   void logout(BuildContext context, WidgetRef ref) {
     var navigator = Routemaster.of(context);
     ref.read(authProvider).signOut();
+    ref.read(userProvider.notifier).update((state) => null);
     navigator.replace('/');
   }
 

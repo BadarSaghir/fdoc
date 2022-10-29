@@ -1,9 +1,11 @@
 import 'package:fdoc/models/error_model.dart';
 import 'package:fdoc/repositories/auth.dart';
 import 'package:fdoc/repositories/local_storage.dart';
+import 'package:fdoc/router.dart';
 import 'package:fdoc/screens/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:routemaster/routemaster.dart';
 
 import 'screens/home_screen.dart';
 
@@ -47,9 +49,16 @@ class _MyAppState extends ConsumerState<MyApp> {
     BuildContext context,
   ) {
     var user = ref.watch(userProvider);
-    return MaterialApp(
+    return MaterialApp.router(
       title: "fdoc",
-      home: user == null ? const LoginScreen() : const HomeScreen(),
+      routerDelegate: RoutemasterDelegate(
+        routesBuilder: (context) {
+          return user != null && user.token!.isNotEmpty
+              ? loggedOutRoute
+              : loggedInRoute;
+        },
+      ),
+      routeInformationParser: const RoutemasterParser(),
       // home: LoginScreen(),
     );
   }

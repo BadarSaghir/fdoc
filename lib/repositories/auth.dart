@@ -127,6 +127,7 @@ class GoogleAuth {
             errorModel = ErrorModel(null, newUser);
             break;
           default:
+            _localStorage.setToken('');
             errorModel = ErrorModel(
                 'Unexpected Error => status:${res.statusCode.toString()} , body:${res.body.toString()}',
                 null);
@@ -140,8 +141,8 @@ class GoogleAuth {
         // print(user.photoUrl);
       }
     } catch (e) {
+      _localStorage.setToken('');
       errorModel = ErrorModel(e.toString(), null);
-
       debugPrint(e.toString());
     }
     return errorModel;

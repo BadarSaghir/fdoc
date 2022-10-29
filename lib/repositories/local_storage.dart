@@ -20,13 +20,12 @@ class LocalStorage {
     preferences = await SharedPreferences.getInstance();
 
     var chk = preferences?.getString('x-auth-token');
-    debugPrint('setting token:' + chk.toString());
+    debugPrint('getting token:' + chk.toString());
     return chk;
   }
 
   void setGoogleToken(String? token) async {
     preferences = await SharedPreferences.getInstance();
-
     await preferences?.setString('google-token', token ?? '');
   }
 

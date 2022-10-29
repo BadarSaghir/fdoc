@@ -79,12 +79,12 @@ class GoogleAuth {
         // print(user.displayName);
         // print(user.photoUrl);
       } else {
-        return errorModel = ErrorModel('Unable to get sign In : ${e}', null);
+        return errorModel =
+            ErrorModel('Unable to get Login due to no user Error', null);
       }
     } catch (e) {
-      errorModel = ErrorModel('Unable to get Login due to no user Error', null);
-
       print(e);
+      return errorModel = ErrorModel('Unable to get sign In : ${e}', null);
     }
     return errorModel;
   }

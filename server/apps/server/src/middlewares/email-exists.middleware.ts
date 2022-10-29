@@ -30,7 +30,11 @@ export class EmailExistsMiddleware implements NestMiddleware {
     console.log('middleware');
     let exception: HttpException;
     try {
+      console.log('middleware in try');
+
       const { email, name, profilePic, googleToken, idT } = req.body;
+      console.log('middleware body');
+
       console.log(googleToken);
       if (idT) console.log(idT);
       if (googleToken) {

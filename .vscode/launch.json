@@ -10,6 +10,13 @@
             "type": "dart",
             "args": ["-d", "chrome","--web-port", "3000"],
         },
+        {
+            "type": "node",
+            "request": "attach",
+            "name": "Attach NestJS WS",
+            "port": 45415,
+            "restart": true,
+          },
 
         {
             "name": "fdoc (profile mode)",

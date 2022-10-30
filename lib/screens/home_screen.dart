@@ -1,4 +1,5 @@
 import 'package:fdoc/repositories/auth.dart';
+import 'package:fdoc/repositories/document_repo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:routemaster/routemaster.dart';
@@ -10,6 +11,15 @@ class HomeScreen extends ConsumerWidget {
     ref.read(authProvider).signOut();
     ref.read(userProvider.notifier).update((state) => null);
     navigator.replace('/');
+  }
+
+  void createDocument(BuildContext context, WidgetRef ref) async {
+    var token = ref.read(userProvider)!.token;
+    var navigator = Routemaster.of(context);
+    final snackBar = Navigator.of(context);
+    final errorModel =
+        await ref.read(documentRepoProvider).createDocument(token ?? '');
+    if (errorModel.data != null) navigator.push("/document/${errorModel.data}");
   }
 
   void navigateToDocument(BuildContext context, String documentId) {

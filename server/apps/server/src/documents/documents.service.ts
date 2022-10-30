@@ -18,13 +18,13 @@ export class DocumentsService {
     try {
       const { createdAt } = req.body;
       console.log('created at', createdAt);
-      const document = new this.documentModel({
+      const documentCreate = new this.documentModel({
         uid: req.user,
         title: 'Untitled Document',
         createdAt: createdAt,
       });
-      const documents = await document.save();
-      return { documents };
+      const document = await documentCreate.save();
+      return { document };
     } catch (e) {
       throw new HttpException(
         { 'Internal Server  Error ': e.message },

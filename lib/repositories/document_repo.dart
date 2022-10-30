@@ -36,11 +36,28 @@ class DocumentRepo {
         });
         switch (res.statusCode) {
           case 201:
-            final documents = DocumentModel.fromJson(res.body);
+            List<DocumentModel> documents = [];
+
+            for (int i = 0; i < jsonDecode(res.body)['documents'].length; i++) {
+              documents.add(
+                DocumentModel.fromJson(
+                  jsonEncode(jsonDecode(res.body)['documents'])[i],
+                ),
+              );
+            }
+
             errorModel = ErrorModel(null, documents);
             break;
           case 200:
-            final documents = DocumentModel.fromJson(res.body);
+            List<DocumentModel> documents = [];
+
+            for (int i = 0; i < jsonDecode(res.body)['documents'].length; i++) {
+              documents.add(
+                DocumentModel.fromJson(
+                  jsonEncode(jsonDecode(res.body)['documents'])[i],
+                ),
+              );
+            }
             errorModel = ErrorModel(null, documents);
             break;
           default:
@@ -58,7 +75,7 @@ class DocumentRepo {
     return errorModel;
   }
 
-  Future<ErrorModel> createDocument() async {
+  Future<ErrorModel> createDocument(String token) async {
     ErrorModel errorModel = ErrorModel("Unexpected error occur", null);
     try {
       var token = await _localStorage.getToken();
@@ -79,7 +96,7 @@ class DocumentRepo {
         switch (res.statusCode) {
           case 201:
             final documents = DocumentModel.fromJson(
-              jsonEncode(jsonDecode(res.body)),
+              jsonEncode(jsonDecode(res.body)['document']),
             );
             errorModel = ErrorModel(null, documents);
             break;
@@ -103,5 +120,38 @@ class DocumentRepo {
       debugPrint(e.toString());
     }
     return errorModel;
+  }
+
+  Future<ErrorModel> getDocumentById(String token, String id) async {
+    ErrorModel error = ErrorModel(
+      'Some unexpected error occurred.',
+      null,
+    );
+    try {
+      var res = await _client.get(
+        Uri.parse('${kBaseUrl}api/v1/fdoc/documents/$id'),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'x-auth-token': token,
+        },
+      );
+      switch (res.statusCode) {
+        case 200:
+          error = ErrorModel(
+            null,
+            DocumentModel.fromJson(
+                jsonEncode(jsonDecode(res.body)['document'])),
+          );
+          break;
+        default:
+          throw 'This Document does not exist, please create a new one.';
+      }
+    } catch (e) {
+      error = ErrorModel(
+        e.toString(),
+        null,
+      );
+    }
+    return error;
   }
 }

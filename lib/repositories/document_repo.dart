@@ -141,6 +141,13 @@ class DocumentRepo {
                 jsonEncode(jsonDecode(res.body)['document'])),
           );
           break;
+        case 201:
+          error = ErrorModel(
+            null,
+            DocumentModel.fromJson(
+                jsonEncode(jsonDecode(res.body)['document'])),
+          );
+          break;
         default:
           throw 'This Document does not exist, please create a new one.';
       }
@@ -173,7 +180,7 @@ class DocumentRepo {
     try {
       var token = await _localStorage.getToken() ?? '';
       var res = await _client.patch(
-        Uri.parse('${kBaseUrl}api/v1/fdoc/documents/$id'),
+        Uri.parse('${kBaseUrl}api/v1/fdoc/documents/title/$id'),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
           'x-auth-token': token,

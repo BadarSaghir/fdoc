@@ -33,7 +33,6 @@ class _DocumentScreenState extends ConsumerState<DocumentScreen> {
     if (errorModel!.data != null) {
       titleController.text = (errorModel!.data as DocumentModel).title;
     }
-    setState(() {});
   }
 
   @override
@@ -43,8 +42,9 @@ class _DocumentScreenState extends ConsumerState<DocumentScreen> {
     titleController.dispose();
   }
 
-  void updateTitle(WidgetRef ref, String title) {
+  void updateTitle(WidgetRef ref, String title) async {
     ref.read(documentRepoProvider).updateTitleById(id: widget.id, title: title);
+    fetchDocumentData();
   }
 
   void getUserData() async {
@@ -93,7 +93,7 @@ class _DocumentScreenState extends ConsumerState<DocumentScreen> {
                   width: 180,
                   child: TextField(
                     onSubmitted: (value) {
-                      //  setState(() {});
+                      setState(() {});
                       updateTitle(ref, value);
                     },
                     controller: titleController,

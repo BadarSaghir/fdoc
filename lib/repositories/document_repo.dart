@@ -151,4 +151,20 @@ class DocumentRepo {
     }
     return error;
   }
+
+  void removeDocumentById(String id) async {
+    try {
+      var token = await _localStorage.getToken() ?? '';
+      var res = await _client.delete(
+        Uri.parse('${kBaseUrl}api/v1/fdoc/documents/$id'),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'x-auth-token': token,
+        },
+      );
+      debugPrint('remove :${res.statusCode}');
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
 }

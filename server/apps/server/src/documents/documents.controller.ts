@@ -73,6 +73,6 @@ export class DocumentsController {
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.documentsService.remove(+id);
+    return this.documentsService.remove(id);
   }
 }

@@ -74,7 +74,7 @@ export class DocumentsService {
     }
   }
 
-  async remove(id: number) {
+  async remove(id: string) {
     try {
       const document = await this.documentModel.findByIdAndRemove(id);
       return { document };

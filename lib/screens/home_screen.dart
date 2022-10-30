@@ -12,6 +12,10 @@ class HomeScreen extends ConsumerWidget {
     navigator.replace('/');
   }
 
+  void navigateToDocument(BuildContext context, String documentId) {
+    Routemaster.of(context).push('/document/$documentId');
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(

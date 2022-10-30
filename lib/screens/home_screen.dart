@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:routemaster/routemaster.dart';
 
+import '../common/widgets/loader.dart';
+import '../models/document_model.dart';
+
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
   void logout(BuildContext context, WidgetRef ref) {
@@ -19,7 +22,7 @@ class HomeScreen extends ConsumerWidget {
     final snackbar = ScaffoldMessenger.of(context);
     final errorModel =
         await ref.read(documentRepoProvider).createDocument(token ?? '');
-    if (errorModel.data != null) {
+    if (errorModel.error == null) {
       navigator.push("/document/${errorModel.data.id}");
     } else {
       snackbar.showSnackBar(
@@ -47,8 +50,43 @@ class HomeScreen extends ConsumerWidget {
           icon: const Icon(Icons.logout),
         )
       ]),
-      body: Center(
-        child: Text(ref.watch(userProvider)!.email ?? "hello"),
+      body: FutureBuilder(
+        future: ref.watch(documentRepoProvider).getDocuments(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Loader();
+          }
+
+          return Center(
+            child: Container(
+              width: 600,
+              margin: const EdgeInsets.only(top: 10),
+              child: ListView.builder(
+                itemCount: snapshot.data!.data!.length,
+                itemBuilder: (context, index) {
+                  DocumentModel document = snapshot.data!.data[index];
+
+                  return InkWell(
+                    onTap: () => navigateToDocument(context, document.id),
+                    child: SizedBox(
+                      height: 50,
+                      child: Card(
+                        child: Center(
+                          child: Text(
+                            document.title,
+                            style: const TextStyle(
+                              fontSize: 17,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          );
+        },
       ),
     );
   }

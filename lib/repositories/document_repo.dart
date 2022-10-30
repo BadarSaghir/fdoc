@@ -21,56 +21,53 @@ class DocumentRepo {
   }) : _client = client;
 
   Future<ErrorModel> getDocuments() async {
-    ErrorModel errorModel = ErrorModel("Unexpected error occur", null);
+    ErrorModel errorModel = ErrorModel("Unexpected error occur", []);
     try {
-      var token = await _localStorage.getToken();
+      final String? token = await _localStorage.getToken();
       if (token == null || token == '') {
         debugPrint('Unexpected error occur -----No Token');
         return ErrorModel("Unexpected error occur -----No Token", null);
       }
-      if (token != null) {
-        var res = await _client
-            .get(Uri.parse("${kBaseUrl}api/v1/fdoc/documents/me"), headers: {
-          'Content-Type': 'Application/json; charset=UTF-8',
-          'x-auth-token': token
-        });
-        switch (res.statusCode) {
-          case 201:
-            List<DocumentModel> documents = [];
+      var res = await _client
+          .get(Uri.parse("${kBaseUrl}api/v1/fdoc/documents/me"), headers: {
+        'Content-Type': 'Application/json; charset=UTF-8',
+        'x-auth-token': token
+      });
+      switch (res.statusCode) {
+        case 201:
+          List<DocumentModel> documents = [];
 
-            for (int i = 0; i < jsonDecode(res.body)['documents'].length; i++) {
-              documents.add(
-                DocumentModel.fromJson(
-                  jsonEncode(jsonDecode(res.body)['documents'])[i],
-                ),
-              );
-            }
+          for (int i = 0; i < jsonDecode(res.body)['documents'].length; i++) {
+            documents.add(
+              DocumentModel.fromJson(
+                jsonEncode(jsonDecode(res.body)['documents'][i]),
+              ),
+            );
+          }
 
-            errorModel = ErrorModel(null, documents);
-            break;
-          case 200:
-            List<DocumentModel> documents = [];
-
-            for (int i = 0; i < jsonDecode(res.body)['documents'].length; i++) {
-              documents.add(
-                DocumentModel.fromJson(
-                  jsonEncode(jsonDecode(res.body)['documents'])[i],
-                ),
-              );
-            }
-            errorModel = ErrorModel(null, documents);
-            break;
-          default:
-            errorModel = ErrorModel(
-                'Unexpected Error => status:${res.statusCode.toString()} , body:${res.body.toString()}',
-                null);
-            debugPrint(res.statusCode.toString() + res.body.toString());
-            break;
-        }
+          errorModel = ErrorModel(null, documents);
+          break;
+        case 200:
+          List<DocumentModel> documents = [];
+          for (int i = 0; i < jsonDecode(res.body)['documents'].length; i++) {
+            documents.add(
+              DocumentModel.fromJson(
+                jsonEncode(jsonDecode(res.body)['documents'][i]),
+              ),
+            );
+          }
+          errorModel = ErrorModel(null, documents);
+          break;
+        default:
+          errorModel = ErrorModel(
+              'Unexpected Error => status:${res.statusCode.toString()} , body:${res.body.toString()}',
+              null);
+          debugPrint(res.statusCode.toString() + res.body.toString());
+          break;
       }
     } catch (e) {
-      errorModel = ErrorModel(e.toString(), null);
-      debugPrint(e.toString());
+      errorModel = ErrorModel(e.toString(), []);
+      debugPrint('catch error :' + e.toString());
     }
     return errorModel;
   }

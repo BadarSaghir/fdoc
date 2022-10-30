@@ -119,17 +119,18 @@ class DocumentRepo {
     return errorModel;
   }
 
-  Future<ErrorModel> getDocumentById(String token, String id) async {
+  Future<ErrorModel> getDocumentById(String id) async {
     ErrorModel error = ErrorModel(
       'Some unexpected error occurred.',
       null,
     );
     try {
+      var token = await _localStorage.getToken();
       var res = await _client.get(
         Uri.parse('${kBaseUrl}api/v1/fdoc/documents/$id'),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
-          'x-auth-token': token,
+          'x-auth-token': token ?? '',
         },
       );
       switch (res.statusCode) {
@@ -163,6 +164,28 @@ class DocumentRepo {
         },
       );
       debugPrint('remove :${res.statusCode}');
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
+  void updateTitleById({required String id, required title}) async {
+    try {
+      var token = await _localStorage.getToken() ?? '';
+      var res = await _client.patch(
+        Uri.parse('${kBaseUrl}api/v1/fdoc/documents/$id'),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'x-auth-token': token,
+        },
+        body: jsonEncode(
+          {
+            'title': title,
+            'id': id,
+          },
+        ),
+      );
+      debugPrint('update :${res.statusCode}');
     } catch (e) {
       debugPrint(e.toString());
     }

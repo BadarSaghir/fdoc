@@ -12,6 +12,7 @@ import { EmailExistsMiddleware } from './middlewares/email-exists.middleware';
 import { JwtModule } from '@nestjs/jwt';
 import { jwtConstants } from './constants';
 import { AuthMiddleware } from './middlewares/auth.middleware';
+import { DocumentsModule } from './documents/documents.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { AuthMiddleware } from './middlewares/auth.middleware';
     }),
     MongooseModule.forRoot(Config.getMoonogseConfig()),
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
+    DocumentsModule,
   ],
 
   controllers: [AppController],

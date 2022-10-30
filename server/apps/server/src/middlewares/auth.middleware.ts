@@ -20,7 +20,7 @@ export class AuthMiddleware implements NestMiddleware {
       req.token = token;
       next();
     } catch (error) {
-      console.log(error);
+      console.log((error as Error).message);
       res.status(500).json({ error: error });
     }
   }

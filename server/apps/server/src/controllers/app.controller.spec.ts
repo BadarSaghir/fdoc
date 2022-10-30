@@ -16,7 +16,7 @@ describe('AppController', () => {
 
   describe('root', () => {
     it('should return "Hello World!"', () => {
-      expect(appController.getFDoc()).toBe('Hello World!');
+      expect(appController.index).toBe('Hello World!');
     });
   });
 });

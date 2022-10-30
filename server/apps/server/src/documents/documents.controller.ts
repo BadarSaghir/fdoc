@@ -13,19 +13,48 @@ import { DocumentsService } from './documents.service';
 import { DocumentDto } from './dto/document.dto';
 import { UpdateDocumentDto } from './dto/update-document.dto';
 import { Request } from 'express';
+import { DocumentCreatedDto } from './dto/document-created.dto';
+import {
+  ApiForbiddenResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiProperty,
+  ApiTags,
+} from '@nestjs/swagger';
 const docControllerRoute = appControllerRoute + '/documents';
-
+class UidI {
+  @ApiProperty({
+    type: String,
+    description: 'This is a required property',
+  })
+  uid: string;
+}
+@ApiTags('Document Managing')
 @Controller(docControllerRoute)
 export class DocumentsController {
   constructor(private readonly documentsService: DocumentsService) {}
 
   @Post('/create')
-  create(@Req() req: Request) {
+  create(
+    @Req() req: Request,
+    @Body()
+    documentCreatedDtomentDto: DocumentCreatedDto,
+  ) {
     return this.documentsService.create(req);
   }
 
   @Get('/me')
-  async findMe(@Req() req: Request) {
+  @ApiOkResponse({
+    description: 'Sucessfull get documents',
+  })
+  @ApiForbiddenResponse({ description: 'Unauthorized Request' })
+  @ApiNotFoundResponse({ description: 'Resource not found' })
+  async findMe(
+    @Req()
+    req: Request,
+    @Body()
+    body: UidI,
+  ) {
     return this.documentsService.findMe(req);
   }
 

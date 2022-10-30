@@ -3,10 +3,11 @@ import { AppService } from '../services/app.service';
 import { FdocPostDto } from '../interfaces/fdoc-post-dto.interface';
 import { User } from '../schemas/user.schema';
 import { Request } from 'express';
+import { ApiTags } from '@nestjs/swagger';
 export const appControllerRoute = '/api/v1/fdoc';
 export const appControllerSignupRoute = 'signup';
 export const appControllerIndexRoute = '/';
-
+@ApiTags('Authentication')
 @Controller(appControllerRoute)
 export class AppController {
   constructor(private readonly appService: AppService) {}

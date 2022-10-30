@@ -5,6 +5,7 @@ import { Document, DocumentDocument } from './entities/document.entity';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { DocumentCreatedDto } from './dto/document-created.dto';
+import { Console } from 'console';
 
 @Injectable()
 export class DocumentsService {
@@ -15,6 +16,7 @@ export class DocumentsService {
   async create(req: Request<any, any, DocumentCreatedDto>) {
     try {
       const { createdAt } = req.body;
+      console.log('created at', createdAt);
       const document = new this.documentModel({
         uid: req.user,
         title: 'Untitled Document',
@@ -42,7 +44,7 @@ export class DocumentsService {
     }
   }
 
-  async findOne(id: number) {
+  async findOne(id: string) {
     try {
       const document = await this.documentModel.findById(id);
       return { document };
@@ -54,12 +56,14 @@ export class DocumentsService {
     }
   }
 
-  async update(id: number, updateDocumentDto: UpdateDocumentDto) {
+  async update(id: string, updateDocumentDto: UpdateDocumentDto) {
     try {
       const { title } = updateDocumentDto;
-      const document = await this.documentModel.findByIdAndUpdate(id, {
+      const updateDocument = await this.documentModel.findByIdAndUpdate(id, {
         title,
       });
+      const document = await updateDocument.save();
+
       return { document };
     } catch (e) {
       throw new HttpException(

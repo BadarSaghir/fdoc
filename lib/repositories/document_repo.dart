@@ -30,7 +30,7 @@ class DocumentRepo {
       }
       if (token != null) {
         var res = await _client
-            .get(Uri.parse("${kBaseUrl}api/v1/fdoc/documents"), headers: {
+            .get(Uri.parse("${kBaseUrl}api/v1/fdoc/documents/me"), headers: {
           'Content-Type': 'Application/json; charset=UTF-8',
           'x-auth-token': token
         });
@@ -68,7 +68,7 @@ class DocumentRepo {
       }
       if (token != null) {
         var res = await _client.post(
-          Uri.parse("${kBaseUrl}api/v1/fdoc/document"),
+          Uri.parse("${kBaseUrl}api/v1/fdoc/documents/create"),
           headers: {
             'Content-Type': 'Application/json; charset=UTF-8',
             'x-auth-token': token
@@ -79,7 +79,7 @@ class DocumentRepo {
         switch (res.statusCode) {
           case 201:
             final documents = DocumentModel.fromJson(
-              jsonEncode(jsonDecode(res.body)['document']),
+              jsonEncode(jsonDecode(res.body)),
             );
             errorModel = ErrorModel(null, documents);
             break;

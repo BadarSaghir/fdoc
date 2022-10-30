@@ -1,3 +1,3 @@
 export class DocumentCreatedDto {
-  createdAt: number;
+  createdAt: string;
 }

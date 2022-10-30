@@ -16,10 +16,18 @@ class HomeScreen extends ConsumerWidget {
   void createDocument(BuildContext context, WidgetRef ref) async {
     var token = ref.read(userProvider)!.token;
     var navigator = Routemaster.of(context);
-    final snackBar = Navigator.of(context);
+    final snackbar = ScaffoldMessenger.of(context);
     final errorModel =
         await ref.read(documentRepoProvider).createDocument(token ?? '');
-    if (errorModel.data != null) navigator.push("/document/${errorModel.data}");
+    if (errorModel.data != null) {
+      navigator.push("/document/${errorModel.data.id}");
+    } else {
+      snackbar.showSnackBar(
+        SnackBar(
+          content: Text(errorModel.error!),
+        ),
+      );
+    }
   }
 
   void navigateToDocument(BuildContext context, String documentId) {
@@ -31,7 +39,7 @@ class HomeScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(actions: [
         IconButton(
-          onPressed: () => {},
+          onPressed: () => {createDocument(context, ref)},
           icon: const Icon(Icons.add),
         ),
         IconButton(
@@ -39,7 +47,9 @@ class HomeScreen extends ConsumerWidget {
           icon: const Icon(Icons.logout),
         )
       ]),
-      body: Center(child: Text(ref.watch(userProvider)!.email ?? "hello")),
+      body: Center(
+        child: Text(ref.watch(userProvider)!.email ?? "hello"),
+      ),
     );
   }
 }

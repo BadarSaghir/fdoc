@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:fdoc/models/error_model.dart';
 import 'package:fdoc/repositories/local_storage.dart';
+import 'package:fdoc/repositories/socketRepo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart';
@@ -16,6 +17,7 @@ final documentProvider = StateProvider<DocumentModel?>((ref) => null);
 class DocumentRepo {
   final Client _client;
   final LocalStorage _localStorage = LocalStorage();
+  SocketRepo socketRepo = SocketRepo();
   DocumentRepo({
     required Client client,
   }) : _client = client;

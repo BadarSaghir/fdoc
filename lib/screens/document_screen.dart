@@ -1,5 +1,6 @@
 import 'package:fdoc/models/document_model.dart';
 import 'package:fdoc/repositories/document_repo.dart';
+import 'package:fdoc/repositories/socketRepo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_quill/flutter_quill.dart' as quill;
@@ -19,10 +20,12 @@ class _DocumentScreenState extends ConsumerState<DocumentScreen> {
       TextEditingController(text: 'Untitled Document');
   final quill.QuillController _controller = quill.QuillController.basic();
   ErrorModel? errorModel;
+  SocketRepo socketRepo = SocketRepo();
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    socketRepo.joinRoom(widget.id);
     fetchDocumentData();
   }
 

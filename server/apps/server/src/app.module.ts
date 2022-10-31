@@ -13,6 +13,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { jwtConstants } from './constants';
 import { AuthMiddleware } from './middlewares/auth.middleware';
 import { DocumentsModule } from './documents/documents.module';
+import { AppGateway } from './app.gateway';
 
 @Module({
   imports: [
@@ -27,7 +28,7 @@ import { DocumentsModule } from './documents/documents.module';
 
   controllers: [AppController],
 
-  providers: [AppService],
+  providers: [AppService, AppGateway],
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {

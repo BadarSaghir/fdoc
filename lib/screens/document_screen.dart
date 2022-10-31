@@ -25,6 +25,7 @@ class DocumentScreen extends ConsumerStatefulWidget {
 }
 
 class _DocumentScreenState extends ConsumerState<DocumentScreen> {
+  bool isLoading = true;
   TextEditingController titleController =
       TextEditingController(text: 'Untitled Document');
   quill.QuillController? _controller;
@@ -33,6 +34,7 @@ class _DocumentScreenState extends ConsumerState<DocumentScreen> {
 
   @override
   void initState() {
+    isLoading = false;
     super.initState();
     socketRepository.joinRoom(widget.id);
     fetchDocumentData();
@@ -97,7 +99,7 @@ class _DocumentScreenState extends ConsumerState<DocumentScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (_controller == null) {
+    if (_controller == null || isLoading) {
       return const Scaffold(body: Loader());
     }
     return Scaffold(
@@ -142,7 +144,7 @@ class _DocumentScreenState extends ConsumerState<DocumentScreen> {
                   onTap: () {
                     Routemaster.of(context).replace('/');
                   },
-                  child: Icon(
+                  child: const Icon(
                     Icons.book_online_sharp,
                     size: 40,
                   )),

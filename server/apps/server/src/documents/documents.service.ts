@@ -1,93 +1,78 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Req,
+} from '@nestjs/common';
+import { appControllerRoute } from '../controllers/app.controller';
+import { DocumentsService } from './documents.service';
+import { DocumentDto } from './dto/document.dto';
 import { UpdateDocumentDto } from './dto/update-document.dto';
 import { Request } from 'express';
-import { Document, DocumentDocument } from './entities/document.entity';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
 import { DocumentCreatedDto } from './dto/document-created.dto';
+import {
+  ApiForbiddenResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiProperty,
+  ApiTags,
+} from '@nestjs/swagger';
+export const docControllerRoute = appControllerRoute + '/documents';
+class UidI {
+  @ApiProperty({
+    type: String,
+    description: 'This is a required property',
+  })
+  uid: string;
+}
+@ApiTags('Document Managing')
+@Controller(docControllerRoute)
+export class DocumentsController {
+  constructor(private readonly documentsService: DocumentsService) {}
 
-@Injectable()
-export class DocumentsService {
-  constructor(
-    @InjectModel(Document.name) private documentModel: Model<DocumentDocument>,
-  ) {}
-
-  async create(req: Request<any, any, DocumentCreatedDto>) {
-    try {
-      const { createdAt } = req.body;
-      console.log('created at', createdAt);
-      const documentCreate = new this.documentModel({
-        uid: req.user,
-        title: 'Untitled Document',
-        createdAt: createdAt,
-      });
-      const document = await documentCreate.save();
-      return { document };
-    } catch (e) {
-      throw new HttpException(
-        { 'Internal Server  Error ': e.message },
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
+  @Post('/create')
+  create(
+    @Req() req: Request,
+    @Body()
+    documentCreatedDtomentDto: DocumentCreatedDto,
+  ) {
+    return this.documentsService.create(req);
+  }
+  static docsByMe = docControllerRoute + '/me';
+  @Get('/me')
+  @ApiOkResponse({
+    description: 'Sucessfull get documents',
+  })
+  @ApiForbiddenResponse({ description: 'Unauthorized Request' })
+  @ApiNotFoundResponse({ description: 'Resource not found' })
+  async findMe(
+    @Req()
+    req: Request,
+    @Body()
+    body: UidI,
+  ) {
+    return this.documentsService.findMe(req);
+  }
+  static docById = docControllerRoute + '/:id';
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.documentsService.findOne(id);
   }
 
-  async findMe(req: Request) {
-    try {
-      const documents = await this.documentModel.find({ uid: req.user });
-      return { documents };
-    } catch (e) {
-      throw new HttpException(
-        { 'Internal Server  Error ': e.message },
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
+  @Patch('/title/:id')
+  update(
+    @Param('id') id: string,
+    @Body() updateDocumentDto: UpdateDocumentDto,
+  ) {
+    return this.documentsService.update(id, updateDocumentDto);
   }
 
-  async findOne(id: string) {
-    try {
-      const document = await this.documentModel.findById(id);
-      return { document };
-    } catch (e) {
-      throw new HttpException(
-        { 'Internal Server  Error ': e.message },
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
-  }
-
-  async update(id: string, updateDocumentDto: UpdateDocumentDto) {
-    try {
-      const { title } = updateDocumentDto;
-      const updateDocument = await this.documentModel.findByIdAndUpdate(id, {
-        title,
-      });
-      const document = await updateDocument.save();
-
-      return { document };
-    } catch (e) {
-      throw new HttpException(
-        { 'Internal Server  Error ': e.message },
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
-  }
-  async getDocumentDelta(delta: string[], room: string) {
-    const model = await this.documentModel.findById(room);
-    model.content = delta;
-    console.log('delta:', delta);
-    const doc = await model.save();
-    console.info(doc);
-    return doc;
-  }
-  async remove(id: string) {
-    try {
-      const document = await this.documentModel.findByIdAndRemove(id);
-      return { document };
-    } catch (e) {
-      throw new HttpException(
-        { 'Internal Server  Error ': e.message },
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.documentsService.remove(id);
   }
 }

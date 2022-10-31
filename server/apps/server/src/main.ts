@@ -15,8 +15,9 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('apis', app, document);
   console.log('running', process.env.PORT || 45415);
-  await app.listen(process.env.PORT || 45415, () => {
-    console.log('running in port http://localhost:45415');
+  await app.listen(process.env.PORT || '0.0.0.0:45415', () => {
+    const port = process.env.PORT || '0.0.0.0:45415';
+    console.log('running in port http://localhost:45415,=>' + port.toString());
     console.log('swagger doc in port http://localhost:45415/apis');
   });
 }

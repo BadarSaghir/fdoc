@@ -14,9 +14,11 @@ import { jwtConstants } from './constants';
 import { AuthMiddleware } from './middlewares/auth.middleware';
 import { DocumentsModule } from './documents/documents.module';
 import { AppGateway } from './app.gateway';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot(),
     JwtModule.register({
       secret: jwtConstants.secret,
       signOptions: { expiresIn: '2d' },

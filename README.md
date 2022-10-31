@@ -20,7 +20,7 @@
 
 ### Thank you for visiting my profile 🤓
 
-- \*\*https://github.com/BadarSaghir/fdoc/web
+- \*\*https://badarsaghir.github.io/fdoc/web
 <!-- ### Feel free to fork and 🌟 this repo!! -->
 
 ---

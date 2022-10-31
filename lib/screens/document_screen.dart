@@ -18,7 +18,7 @@ class DocumentScreen extends ConsumerStatefulWidget {
 class _DocumentScreenState extends ConsumerState<DocumentScreen> {
   TextEditingController titleController =
       TextEditingController(text: 'Untitled Document');
-  quill.QuillController _controller = quill.QuillController.basic();
+  final quill.QuillController _controller = quill.QuillController.basic();
   ErrorModel? errorModel;
   @override
   void initState() {
@@ -37,6 +37,7 @@ class _DocumentScreenState extends ConsumerState<DocumentScreen> {
 
   @override
   void dispose() {
+    // ignore: todo
     // TODO: implement dispose
     super.dispose();
     titleController.dispose();
@@ -71,7 +72,7 @@ class _DocumentScreenState extends ConsumerState<DocumentScreen> {
                 ),
                 label: Text("Share"),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: kBluekColor,
+                  backgroundColor: kBlueColor,
                 ),
               ),
             ),
@@ -90,7 +91,7 @@ class _DocumentScreenState extends ConsumerState<DocumentScreen> {
                   width: 10,
                 ),
                 SizedBox(
-                  width: 180,
+                  width: MediaQuery.of(context).size.width * 0.2,
                   child: TextField(
                     onSubmitted: (value) {
                       setState(() {});
@@ -99,11 +100,11 @@ class _DocumentScreenState extends ConsumerState<DocumentScreen> {
                     controller: titleController,
                     // ignore: prefer_const_constructors
                     decoration: InputDecoration(
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: kBluekColor),
+                      focusedBorder: const OutlineInputBorder(
+                        borderSide: BorderSide(color: kBlueColor),
                       ),
                       border: InputBorder.none,
-                      contentPadding: EdgeInsets.only(left: 10),
+                      contentPadding: const EdgeInsets.only(left: 10),
                     ),
                   ),
                 )
@@ -113,28 +114,33 @@ class _DocumentScreenState extends ConsumerState<DocumentScreen> {
           elevation: 0,
           backgroundColor: Colors.white,
           bottom: PreferredSize(
+            preferredSize: const Size.fromHeight(1),
             child: Container(
               decoration: BoxDecoration(
                   border: Border.all(color: kGreyColor, width: 0.1)),
             ),
-            preferredSize: const Size.fromHeight(1),
           ),
         ),
-        body: Column(
-          children: [
-            quill.QuillToolbar.basic(
-              controller: _controller,
-            ),
-            Expanded(
-              child: SizedBox(
-                width: 750,
-                child: Card(
-                  child: quill.QuillEditor.basic(
-                      controller: _controller, readOnly: false),
-                ),
+        body: Padding(
+          padding: EdgeInsets.only(
+              left: MediaQuery.of(context).size.width * 0.1,
+              right: MediaQuery.of(context).size.width * 0.1),
+          child: Column(
+            children: [
+              quill.QuillToolbar.basic(
+                controller: _controller,
               ),
-            )
-          ],
+              Expanded(
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.8,
+                  child: Card(
+                    child: quill.QuillEditor.basic(
+                        controller: _controller, readOnly: false),
+                  ),
+                ),
+              )
+            ],
+          ),
         ));
   }
 }

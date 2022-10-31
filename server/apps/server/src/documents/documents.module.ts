@@ -1,4 +1,4 @@
-import { MiddlewareConsumer, Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
 import { DocumentsService } from './documents.service';
 import { DocumentsController } from './documents.controller';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -19,9 +19,13 @@ import { Document, DocumentSchema } from './entities/document.entity';
   ],
   controllers: [DocumentsController],
   providers: [DocumentsService],
+  exports: [DocumentsService],
 })
 export class DocumentsModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(AuthMiddleware).forRoutes(DocumentsController);
+    consumer
+      .apply(AuthMiddleware)
+      .exclude({ path: DocumentsController.docById, method: RequestMethod.GET })
+      .forRoutes(DocumentsController);
   }
 }

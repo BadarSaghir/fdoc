@@ -21,7 +21,7 @@ import {
   ApiProperty,
   ApiTags,
 } from '@nestjs/swagger';
-const docControllerRoute = appControllerRoute + '/documents';
+export const docControllerRoute = appControllerRoute + '/documents';
 class UidI {
   @ApiProperty({
     type: String,
@@ -57,7 +57,7 @@ export class DocumentsController {
   ) {
     return this.documentsService.findMe(req);
   }
-
+  static docById = docControllerRoute + '/:id';
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.documentsService.findOne(id);

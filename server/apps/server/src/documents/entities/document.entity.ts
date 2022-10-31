@@ -14,8 +14,8 @@ export class Document {
   @Prop({ required: true, type: String, trim: true })
   title: string;
 
-  @Prop({ type: Array, default: [String] })
-  content: Array<string>;
+  @Prop({ type: Array, default: [] })
+  content: Array<any>;
 }
 
 export const DocumentSchema = SchemaFactory.createForClass(Document);

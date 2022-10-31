@@ -119,16 +119,17 @@ class HomeScreen extends ConsumerStatefulWidget {
 }
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
-  Future<ErrorModel>? futureData = null;
+  Future<ErrorModel>? futureData;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     getData();
+    // futureData = ref.read(documentRepoProvider).getDocuments();
   }
 
-  void getData() async {
-    var futureData = await ref.read(documentRepoProvider).getDocuments();
+  void getData() {
+    futureData = ref.read(documentRepoProvider).getDocuments();
   }
 
   void logout(BuildContext context, WidgetRef ref) {
@@ -176,8 +177,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           icon: const Icon(Icons.logout),
         )
       ]),
-      body: FutureBuilder<ErrorModel>(
-        future: futureData ?? ref.read(documentRepoProvider).getDocuments(),
+      body: FutureBuilder(
+        future: futureData,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Loader();

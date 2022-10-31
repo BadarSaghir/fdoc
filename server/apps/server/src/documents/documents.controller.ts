@@ -42,7 +42,7 @@ export class DocumentsController {
   ) {
     return this.documentsService.create(req);
   }
-
+  static docsByMe = docControllerRoute + '/me';
   @Get('/me')
   @ApiOkResponse({
     description: 'Sucessfull get documents',

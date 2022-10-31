@@ -26,6 +26,9 @@ export class DocumentsModule {
     consumer
       .apply(AuthMiddleware)
       .exclude({ path: DocumentsController.docById, method: RequestMethod.GET })
-      .forRoutes(DocumentsController);
+      .forRoutes(DocumentsController, {
+        path: DocumentsController.docsByMe,
+        method: RequestMethod.GET,
+      });
   }
 }

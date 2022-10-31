@@ -1,5 +1,4 @@
 import 'package:fdoc/models/document_model.dart';
-import 'package:fdoc/repositories/auth.dart';
 import 'package:fdoc/repositories/document_repo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -60,87 +59,91 @@ class _DocumentScreenState extends ConsumerState<DocumentScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          actions: [
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: ElevatedButton.icon(
-                onPressed: () {},
-                icon: const Icon(
-                  Icons.lock,
-                  size: 16,
-                ),
-                label: Text("Share"),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: kBlueColor,
-                ),
+      appBar: AppBar(
+        actions: [
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: ElevatedButton.icon(
+              onPressed: () {},
+              icon: const Icon(
+                Icons.lock,
+                size: 16,
+              ),
+              label: Text("Share"),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: kBlueColor,
               ),
             ),
-          ],
-          title: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8.0),
-            child: Row(
-              // ignore: prefer_const_literals_to_create_immutables
-              children: [
-                const Icon(
-                  Icons.bookmark_add_rounded,
-                  color: Colors.blue,
-                  size: 36,
-                ),
-                const SizedBox(
-                  width: 10,
-                ),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.2,
-                  child: TextField(
-                    onSubmitted: (value) {
-                      setState(() {});
-                      updateTitle(ref, value);
-                    },
-                    controller: titleController,
-                    // ignore: prefer_const_constructors
-                    decoration: InputDecoration(
-                      focusedBorder: const OutlineInputBorder(
-                        borderSide: BorderSide(color: kBlueColor),
-                      ),
-                      border: InputBorder.none,
-                      contentPadding: const EdgeInsets.only(left: 10),
-                    ),
-                  ),
-                )
-              ],
-            ),
           ),
-          elevation: 0,
-          backgroundColor: Colors.white,
-          bottom: PreferredSize(
-            preferredSize: const Size.fromHeight(1),
-            child: Container(
-              decoration: BoxDecoration(
-                  border: Border.all(color: kGreyColor, width: 0.1)),
-            ),
-          ),
-        ),
-        body: Padding(
-          padding: EdgeInsets.only(
-              left: MediaQuery.of(context).size.width * 0.1,
-              right: MediaQuery.of(context).size.width * 0.1),
-          child: Column(
+        ],
+        title: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          child: Row(
+            // ignore: prefer_const_literals_to_create_immutables
             children: [
-              quill.QuillToolbar.basic(
-                controller: _controller,
+              const Icon(
+                Icons.bookmark_add_rounded,
+                color: Colors.blue,
+                size: 36,
               ),
-              Expanded(
-                child: SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.8,
-                  child: Card(
-                    child: quill.QuillEditor.basic(
-                        controller: _controller, readOnly: false),
+              const SizedBox(
+                width: 10,
+              ),
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.2,
+                child: TextField(
+                  onSubmitted: (value) {
+                    setState(() {});
+                    updateTitle(ref, value);
+                  },
+                  controller: titleController,
+                  // ignore: prefer_const_constructors
+                  decoration: InputDecoration(
+                    focusedBorder: const OutlineInputBorder(
+                      borderSide: BorderSide(color: kBlueColor),
+                    ),
+                    border: InputBorder.none,
+                    contentPadding: const EdgeInsets.only(left: 10),
                   ),
                 ),
               )
             ],
           ),
-        ));
+        ),
+        elevation: 0,
+        backgroundColor: Colors.white,
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(1),
+          child: Container(
+            decoration: BoxDecoration(
+                border: Border.all(color: kGreyColor, width: 0.1)),
+          ),
+        ),
+      ),
+      body: Padding(
+        padding: EdgeInsets.only(
+            left: MediaQuery.of(context).size.width * 0.1,
+            right: MediaQuery.of(context).size.width * 0.1),
+        child: Column(
+          children: [
+            quill.QuillToolbar.basic(
+              controller: _controller,
+            ),
+            Expanded(
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width * 0.8,
+                child: Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: quill.QuillEditor.basic(
+                        controller: _controller, readOnly: false),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
